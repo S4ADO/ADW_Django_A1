@@ -16,9 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import include, url
 from django.urls import path
+from tasks import views as task_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tasks/', include('tasks.urls')),
     path('', include('tasks.urls')),
+    path('register/', task_views.register, name = 'register'),
+    path('login/', task_views.signin, name = 'login'),
 ]

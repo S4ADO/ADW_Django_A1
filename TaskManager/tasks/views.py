@@ -2,29 +2,54 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.views.generic import View
 from django.http import HttpResponse
-from .forms import UserForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 
 def index(request):
-    return render(request, 'login.html', context = None)
+	form = AuthenticationForm()
+	return render(request, 'login.html', {'form': form})
+
+def home(request):
+	return render(request, 'home.html', context = None)
 
 def register(request):
-    return HttpResponse("register")
-
-class UserFormView(View):
-	formc = UserForm
-	templaten = 'tasks/register.html'
-
-	#Display reg form
-	def get(self, request):
-		form = self.formc(None)
-		return render(request, self.templaten, {'form': form})
-
-	#Handle register request
-	def post(self, request):
-		form = self.formc(request.POST)
+	if request.method == 'POST':
+		form = UserCreationForm(request.POST)
 		if form.is_valid():
-			user = form.save(commit=False)
-			username = form.cleaned_data['username']
-			password = form.cleaned_data['password']
-			user.set_password(password)
-			user.save()
+			form.save()
+			username = form.cleaned_data.get('username')
+			raw_password = form.cleaned_data.get('password1')
+			user = authenticate(username=username, password=raw_password)
+			login(request, user)
+			return render(request, 'home.html', context = None)
+	else:
+		form = UserCreationForm()
+	return render(request, 'register.html', {'form': form})
+
+def signin(request):
+	if request.method == 'POST':
+		form = UserCreationForm(request.POST)
+		if form.is_valid():
+			form.save()
+			username = form.cleaned_data.get('username')
+			password = form.cleaned_data.get('password')
+			user = authenticate(username=username, password=raw_password)
+			login(request, user)
+			return render(request, 'home.html', context = None)
+	else:
+		form = AuthenticationForm()
+	return render(request, '/tasks', {'form': form})	
+
+def logout(request):
+	if request.method == 'POST':
+		form = UserCreationForm(request.POST)
+		if form.is_valid():
+			form.save()
+			username = form.cleaned_data.get('username')
+			raw_password = form.cleaned_data.get('password1')
+			user = authenticate(username=username, password=raw_password)
+			login(request, user)
+			return redirect('home')
+	else:
+		form = UserCreationForm()
+	return render(request, 'register.html', {'form': form})	
