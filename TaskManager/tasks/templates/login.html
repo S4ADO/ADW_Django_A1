@@ -1,0 +1,11 @@
+<title>Login</title>
+{% block content %}
+<div align="center">
+	<h1>Login to Task Manager</h1>
+	<form method="post" action="/tasks/login">
+		{% csrf_token %}
+	</form>
+	Not registered? <a href = "/tasks/register">Register here</a>
+</div>
+</form>
+{% endblock %}

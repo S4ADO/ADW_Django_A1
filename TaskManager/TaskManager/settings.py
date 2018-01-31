@@ -52,9 +52,11 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'TaskManager.urls'
 
 TEMPLATES = [
-    {
+        {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            'D:/Documents/UNI/Year 3/Advanced Web Programming/Django/ADW_Django_A1/ADW_Django_A1/TaskManager/tasks/templates'
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
