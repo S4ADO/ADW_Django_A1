@@ -7,12 +7,16 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import logout as log_out
 from .models import Task
 from .forms import TaskCreateForm
-from datetime import datetime
+from .forms import TaskDeleteForm
 
 def home(request):
 	if request.user.is_active == 0:
 		return redirect('signin')
-	return render(request, 'home.html', context = None)
+
+	form = TaskCreateForm()
+	tasks = Task.objects.filter(userid_id=request.user.id).order_by('-created_at')
+	args = {'tasks': tasks}
+	return render(request, 'home.html', args)
 
 def create(request):
 	if request.user.is_active == 0:
@@ -27,12 +31,29 @@ def create(request):
 			task.bodym = form.cleaned_data.get('body')
 			task.completed_at = form.cleaned_data.get('date')
 			task.save()
-			return render(request, 'home.html', context = None)
+			return redirect('home')
 		else:
 			error = form.errors
 			return render(request, 'create.html', {'error' : error})	
 	else:
 		return render(request, 'create.html', context = None)
+
+def delete(request):
+	if request.user.is_active == 0:
+		return redirect('signin')
+
+	if request.method == 'POST':
+		form = TaskDeleteForm(data=request.POST)
+		if form.is_valid():
+			count = Task.objects.filter(id = form.cleaned_data.get('taskid'), userid_id = request.user.id).count()
+			if count == 1:
+				task = Task.objects.filter(id = form.cleaned_data.get('taskid')).delete()
+			return redirect('home')
+		else:
+			error = form.errors
+			return render(request, 'create.html', {'error' : error})	
+	else:
+		return render(request, 'create.html', context = None)		
 
 def register(request):
 	if request.method == 'POST':

@@ -1,7 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
 <div align="center">
-	<a href = "/tasks/create">Add Task</a>
+	<h2>{{successtext}}</h1>
+	<div class="panel-body">
+		{%if tasks%}
+                    <table class="table table-striped">
+                            <tr>
+                                <th>Date added</th>
+                                <th>Title</th>
+                                <th>Body</th>
+                                <th>Date to Complete</th>
+                                <th>Completed</th>    
+                                <th>Edit</th>
+                                <th>Delete</th>        
+                            </tr>
+                         {% for task in tasks %}
+                            <tr>
+                                <td> {{task.created_at}} </td>
+                                <td> {{task.title}} </td>
+                                <td> {{task.body}} </td>
+                                <td> {{task.complete_date}} </td>
+                                <td> {{task.complete}} </td>
+                                <td> <a href = "">Edit</a> </td>
+                                <td> 
+                                    <form action = "tasks/delete" method = "POST">
+                                        {% csrf_token %}
+                                        <input type = "hidden" name = "taskid" value = "{{task.id}}">
+                                        <input type = "Submit" value = "Delete">
+                                    </form> 
+                                </td>
+                            </tr>
+                       	{% endfor %}
+                    </table>
+        {%else%}
+                        <p>You have no current tasks</p>    
+        {%endif%}          
+                    <a href = "/tasks/create">Add Task</a>
+                </div>
 </div>
 </form>
 {% endblock %}

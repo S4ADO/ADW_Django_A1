@@ -9,3 +9,6 @@ class TaskCreateForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['title', 'body', 'date']
+
+class TaskDeleteForm(forms.Form):
+	taskid = forms.IntegerField()
