@@ -13,6 +13,9 @@ class TaskCreateForm(forms.ModelForm):
 class TaskDeleteForm(forms.Form):
 	taskid = forms.IntegerField()
 
+class TaskSearchForm(forms.Form):
+	search = forms.CharField()	
+
 class TaskEditForm(forms.ModelForm):
     title = forms.CharField()
     body = forms.CharField

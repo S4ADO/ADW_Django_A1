@@ -4,7 +4,7 @@
 	<h2>{{successtext}}</h1>
 	<div class="panel-body">
         <div align = "center">
-                        <form action = "search/" method = "POST">
+                        <form action = "" method = "POST">
                             {% csrf_token %}
                             <input type = "text" name = "search" placeholder = "Search task bodies">
                             <input type="image" height = "15" width = "15" src="https://www.alrightnow.com/wp-content/themes/alright/img/search-icon.png" alt="Submit Form" />
@@ -34,9 +34,9 @@
                                 		Yes
                                 	{% endif %}	
                                 </td>
-                                <td> <a href = "tasks/edit/{{task.id}}">Edit</a> </td>
+                                <td> <a href = "/tasks/edit/{{task.id}}">Edit</a> </td>
                                 <td> 
-                                    <form action = "tasks/delete" method = "POST">
+                                    <form action = "/tasks/delete" method = "POST">
                                         {% csrf_token %}
                                         <input type = "hidden" name = "taskid" value = "{{task.id}}">
                                         <input type = "Submit" value = "Delete">
@@ -46,7 +46,7 @@
                        	{% endfor %}
                     </table>
         {%else%}
-                        <p>You have no current tasks</p>    
+                        <p>There were no matching tasks for the string: {{body}}</p>    
         {%endif%}          
                     <a href = "/tasks/create">Add Task</a>
                 </div>

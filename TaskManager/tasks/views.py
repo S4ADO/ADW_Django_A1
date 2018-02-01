@@ -9,6 +9,7 @@ from .models import Task
 from .forms import TaskCreateForm
 from .forms import TaskEditForm
 from .forms import TaskDeleteForm
+from .forms import TaskSearchForm
 
 def home(request):
 	if request.user.is_active == 0:
@@ -37,6 +38,21 @@ def create(request):
 	else:
 		return render(request, 'create.html', context = None)
 
+def search(request):
+	if request.user.is_active == 0:
+		return redirect('signin')
+
+	if request.method == 'POST':
+		form = TaskSearchForm(data=request.POST)
+		if form.is_valid():
+			search = form.cleaned_data.get('search')
+			tasks = Task.objects.filter(body__contains=search,  userid_id = request.user.id)
+			args = {'tasks': tasks, 'search' : search}
+			return render(request, 'search.html', args)
+		else:
+			return render(request, 'home.html', context=None)
+		
+
 def edit(request, task_id):
 	if request.user.is_active == 0:
 		return redirect('signin')
@@ -59,8 +75,7 @@ def edit(request, task_id):
 			else:
 				return redirect('home')	
 		else:
-			error = form.errors
-			return render(request, 'create.html', {'error' : error})	
+			return render(request, 'home.html', context=None)	
 
 	elif request.method == "GET":
 		count = Task.objects.filter(id = task_id, userid_id = request.user.id).count()
@@ -89,10 +104,9 @@ def delete(request):
 				task = Task.objects.filter(id = form.cleaned_data.get('taskid')).delete()
 			return redirect('home')
 		else:
-			error = form.errors
-			return render(request, 'create.html', {'error' : error})	
+			return render(request, 'home.html', context=None)	
 	else:
-		return render(request, 'create.html', context = None)		
+		return render(request, 'home.html', context=None)	
 
 def register(request):
 	if request.method == 'POST':
