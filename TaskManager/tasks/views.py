@@ -11,6 +11,7 @@ from .forms import TaskEditForm
 from .forms import TaskDeleteForm
 from .forms import TaskSearchForm
 
+#Display the home page once user has logged in
 def home(request):
 	if request.user.is_active == 0:
 		return redirect('signin')
@@ -18,6 +19,7 @@ def home(request):
 	args = {'tasks': tasks}
 	return render(request, 'home.html', args)
 
+#Display the creation page and handle creation requests to insert into the database
 def create(request):
 	if request.user.is_active == 0:
 		return redirect('signin')
@@ -38,6 +40,7 @@ def create(request):
 	else:
 		return render(request, 'create.html', context = None)
 
+#Search task bodies with given string
 def search(request):
 	if request.user.is_active == 0:
 		return redirect('signin')
@@ -52,7 +55,8 @@ def search(request):
 		else:
 			return render(request, 'home.html', context=None)
 		
-
+#Handle edits to task title, body, completion status and completion date and save to the database if exists
+#Display the edit page when for a GET request
 def edit(request, task_id):
 	if request.user.is_active == 0:
 		return redirect('signin')
@@ -92,6 +96,7 @@ def edit(request, task_id):
 	else:
 		return render(request, 'home.html', context = None)	
 
+#Delete tasks belonging to the user if exists
 def delete(request):
 	if request.user.is_active == 0:
 		return redirect('signin')
@@ -108,6 +113,7 @@ def delete(request):
 	else:
 		return render(request, 'home.html', context=None)	
 
+#Register, uses built-in mehtods
 def register(request):
 	if request.method == 'POST':
 		form = UserCreationForm(request.POST)
@@ -122,6 +128,7 @@ def register(request):
 		form = UserCreationForm()
 	return render(request, 'register.html', {'form': form})
 
+#Signin uses built-in methods
 def signin(request):
 	if request.user.is_active == 1:
 		return redirect('home')
@@ -139,7 +146,8 @@ def signin(request):
 	else:
 		form = AuthenticationForm()
 	return render(request, 'signin.html', {'form': form})	
-
+	
+#Log out uses built-in methods
 def logout(request):
 	log_out(request)
 	form = AuthenticationForm()

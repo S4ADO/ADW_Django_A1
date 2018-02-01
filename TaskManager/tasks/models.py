@@ -2,8 +2,7 @@ from django.db import models
 from django.conf import settings
 from datetime import datetime
 
-# Create your models here.
-
+#Task model
 class Task(models.Model):
 	title = models.CharField(max_length=255)
 	body = models.CharField(max_length=5000)

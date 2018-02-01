@@ -3,6 +3,7 @@ from django.conf.urls import include, url
 
 from . import views
 
+#Define URLs in the task app
 urlpatterns = [
     path('', views.signin, name='index'),
     path('tasks/register', views.register, name='register'),
