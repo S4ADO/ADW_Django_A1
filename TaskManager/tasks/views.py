@@ -7,7 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 
 def index(request):
 	form = AuthenticationForm()
-	return render(request, 'login.html', {'form': form})
+	return render(request, 'signin.html', {'form': form})
 
 def home(request):
 	return render(request, 'home.html', context = None)
@@ -28,17 +28,19 @@ def register(request):
 
 def signin(request):
 	if request.method == 'POST':
-		form = UserCreationForm(request.POST)
+		form = AuthenticationForm(data=request.POST)
 		if form.is_valid():
-			form.save()
 			username = form.cleaned_data.get('username')
 			password = form.cleaned_data.get('password')
-			user = authenticate(username=username, password=raw_password)
-			login(request, user)
-			return render(request, 'home.html', context = None)
+			user = authenticate(username=username, password=password)
+			if user is not None:
+				if user.is_active == 1:
+					request.session.set_expiry(86400) #sets the exp. value of the session 
+					login(request, user)
+					return render(request, 'home.html', context = None)
 	else:
 		form = AuthenticationForm()
-	return render(request, '/tasks', {'form': form})	
+	return render(request, 'signin.html', {'form': form})	
 
 def logout(request):
 	if request.method == 'POST':
