@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div align="center">
+	<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <h1>Create Task</h1>
+                	{{error}}
+                    <div class="panel-body">
+                    <form method = "POST" id = "createpost">
+                       	{% csrf_token %}
+
+                        <label for="title">Title</label><br>
+                        <input name="title" id="title" type = "text" placeholder="Input title" required><br>
+
+                        <label for="body">Body</label><br>
+                        <textarea rows="4" cols="50" name = "body" form="createpost" placeholder="Input task body" required></textarea><br>
+
+                        <label for="date">Completion Date (yyyy-mm-dd hh:mm)</label><br>
+                        <input name="date" id="date" type = "text" required><br><br>
+
+                        <input type = "submit" value = "submit">
+                    </form>    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</form>
+{% endblock %}
