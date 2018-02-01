@@ -7,13 +7,12 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import logout as log_out
 from .models import Task
 from .forms import TaskCreateForm
+from .forms import TaskEditForm
 from .forms import TaskDeleteForm
 
 def home(request):
 	if request.user.is_active == 0:
 		return redirect('signin')
-
-	form = TaskCreateForm()
 	tasks = Task.objects.filter(userid_id=request.user.id).order_by('-created_at')
 	args = {'tasks': tasks}
 	return render(request, 'home.html', args)
@@ -34,9 +33,49 @@ def create(request):
 			return redirect('home')
 		else:
 			error = form.errors
-			return render(request, 'create.html', {'error' : error})	
+			return render(request, 'create.html', {'error' : error})
 	else:
 		return render(request, 'create.html', context = None)
+
+def edit(request, task_id):
+	if request.user.is_active == 0:
+		return redirect('signin')
+
+	if request.method == 'POST':
+		form = TaskEditForm(data=request.POST)
+		if form.is_valid():
+			count = Task.objects.filter(id = form.cleaned_data.get('id'), userid_id = request.user.id).count()
+			if count == 1:
+				task = Task.objects.get(id = form.cleaned_data.get('id'), userid_id = request.user.id)		
+				task.title = form.cleaned_data.get('title')
+				task.body = form.cleaned_data.get('body')
+				task.completed_at = form.cleaned_data.get('date')
+				if bool(form.cleaned_data.get('completed')):
+					task.complete = 1
+				else:
+					task.complete = 0
+				task.save()
+				return redirect(home)
+			else:
+				return redirect('home')	
+		else:
+			error = form.errors
+			return render(request, 'create.html', {'error' : error})	
+
+	elif request.method == "GET":
+		count = Task.objects.filter(id = task_id, userid_id = request.user.id).count()
+		if count == 1:
+			task = Task.objects.get(id = task_id, userid_id = request.user.id)
+			task.completed_at = str(task.completed_at)
+			if "+" in task.completed_at:
+				splitdate = task.completed_at.split("+")
+				task.completed_at = splitdate[0]
+			args = {'task': task}
+			return render(request, 'edit.html', args)
+		else:
+			return render(request, 'home.html', context = None)	
+	else:
+		return render(request, 'home.html', context = None)	
 
 def delete(request):
 	if request.user.is_active == 0:

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-md-offset-0">
+            <div class="panel panel-default">
+                <h1>Edit Task</h1>
+                <div class="panel-body">
+                        <form method = "POST" id = "editpost" action = "">
+                            {% csrf_token %}
+                            <input type = "hidden" name = "id" value = "{{task.id}}">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Date added</th>
+                                    <th>Title</th>
+                                    <th>Body</th>
+                                    <th>Date to Complete </th>
+                                    <th>Completed</th>    
+                                    <th>Save</th>     
+                                </tr>
+                                <tr>
+                                    <td> {{task.created_at}} </td>
+                                    <td contenteditable='true'><input name="title" id="title" type = "text" value="{{task.title}}" required></td>
+                                    <td contenteditable='true'>
+                                        <textarea rows="4" cols="50" name = "body" form="editpost" required>{{task.body}}</textarea>
+                                    </td>
+                                    <td><input name="date" id="date" type = "text" value = "{{task.completed_at}}" required></td>
+                                    <td> <input type="checkbox" name="completed" value="on" {%if task.complete == 1%} checked {% endif %}> </td>
+                                    <td> 
+                                    <input type = "submit" value = "save">
+                                </tr>
+                            </table>
+                        </form>   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
