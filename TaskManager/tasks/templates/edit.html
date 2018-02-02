@@ -9,7 +9,7 @@
                         <form method = "POST" id = "editpost" action = "">
                             {% csrf_token %}
                             <input type = "hidden" name = "id" value = "{{task.id}}">
-                            <table class="table table-striped">
+                            <table border="1px">
                                 <tr>
                                     <th>Date added</th>
                                     <th>Title</th>
